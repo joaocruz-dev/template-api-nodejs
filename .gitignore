@@ -1,0 +1,7 @@
+# Pastas
+node_modules
+dist
+
+# Arquivos
+yarn-error.log
+yarn.lock
