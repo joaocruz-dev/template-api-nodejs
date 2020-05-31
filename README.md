@@ -49,5 +49,14 @@ In the package.json file, change the name and description of your project (Remem
 
 **Don't forget to also change the project name in the BaseController file in the src/Api/Controllers/public/Base folder**
 
+## Credits and Technologies
 
+- [NestJS](https://nestjs.com)
+- [NodeJS](https://nodejs.org)
+- [WebPack](https://webpack.js.org)
+- [MongoDB](https://www.mongodb.com)
+- [TypeScript](https://www.typescriptlang.org)
 
+## License
+
+MIT
