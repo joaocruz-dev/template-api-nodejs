@@ -22,7 +22,7 @@ npm install
 ```
 
 Then just run the command to start the dev environment. 
-He had started running on port 3000 (https://localhost:5009/api/start)
+He had started running on port 3000 (https://localhost:3000/api/start)
 
 ```bash
 yarn dev
