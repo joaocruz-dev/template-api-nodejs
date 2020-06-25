@@ -11,8 +11,5 @@ export default class SubMenu {
   public router: string
 
   @AutoMap()
-  public url: string
-
-  @AutoMap()
   public server: string
 }

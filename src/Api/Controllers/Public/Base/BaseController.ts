@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common'
-import { SettingsApp } from '@/Application/Services'
+
 import { version } from '@/../package.json'
+import { SettingsApp } from '@/Application/Services'
 
 @Controller()
 export default class BaseController {

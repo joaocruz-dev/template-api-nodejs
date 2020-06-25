@@ -1,5 +1,5 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator'
 import { ObjectId } from 'mongodb'
+import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator'
 
 export default function IsObjectId (validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {

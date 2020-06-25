@@ -1,6 +1,6 @@
 import MenuServices from './Menu/MenuServices'
+import ProfileServices from './Profile/ProfileServices'
 import SettingsServices from './Settings/SettingsServices'
 import UserServices from './User/UserServices'
-import UserGroupServices from './UserGroup/UserGroupServices'
 
-export { MenuServices, SettingsServices, UserServices, UserGroupServices }
+export { MenuServices, ProfileServices, SettingsServices, UserServices }

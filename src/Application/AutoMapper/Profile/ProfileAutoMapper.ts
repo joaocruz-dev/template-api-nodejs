@@ -1,9 +1,10 @@
-import { Mapper } from '@nartc/automapper'
 import { ObjectId } from 'mongodb'
-import { UserGroup } from '@/Domain/Entity'
-import { UserGroupViewModel } from '@/Api/ViewModel'
+import { Mapper } from '@nartc/automapper'
 
-Mapper.createMap(UserGroup, UserGroupViewModel)
+import { Profile } from '@/Domain/Entity'
+import { ProfileViewModel } from '@/Api/ViewModel'
+
+Mapper.createMap(Profile, ProfileViewModel)
   .forMember(
     dest => dest.id,
     opts => opts.mapFrom(src => src._id.toHexString())

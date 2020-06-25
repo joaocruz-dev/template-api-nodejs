@@ -1,8 +1,9 @@
-import { Controller, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 import { CatchException } from '@/Api/HttpException'
-import LoginValidations from './validations/LoginValidations'
-import { UserApp } from '@/Application/Services'
+import { Controller, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+
 import Token from '@/Api/Auth/Token'
+import { UserApp } from '@/Application/Services'
+import LoginValidations from './validations/LoginValidations'
 
 interface accessToken {
   token: string
@@ -16,9 +17,9 @@ export default class AuthController {
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   async auth (@Body() login: LoginValidations): Promise<accessToken> {
     try {
-      const loginApp = await UserApp.login(login.login, login.password)
+      const user = await UserApp.login(login.login, login.password)
       const time = login.remember ? 60 * 60 * 24 * 90 : 60 * 60
-      const token = Token.sign({ id: loginApp.id }, time)
+      const token = Token.sign({ id: user.id }, time)
       return { message: 'Usuário logado', authenticated: true, token }
     } catch (error) {
       throw new CatchException(error)

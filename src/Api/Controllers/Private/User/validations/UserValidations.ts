@@ -8,11 +8,6 @@ export default class UserValidations {
 
   @IsNotEmpty()
   @IsString()
-  @Length(14, 14)
-  public cpf: string
-
-  @IsNotEmpty()
-  @IsString()
   @Length(15, 15)
   public phone: string
 }

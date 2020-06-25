@@ -1,5 +1,5 @@
-import { AutoMap } from '@nartc/automapper'
 import { ObjectId } from 'mongodb'
+import { AutoMap } from '@nartc/automapper'
 
 export default class User {
   @AutoMap()
@@ -7,6 +7,9 @@ export default class User {
 
   @AutoMap()
   public name: string
+
+  @AutoMap()
+  public cpf: string
 
   @AutoMap()
   public email: string
@@ -21,7 +24,7 @@ export default class User {
   public avatar: string
 
   @AutoMap()
-  public usergroup: ObjectId
+  public idProfile: ObjectId
 
   @AutoMap()
   public status: boolean

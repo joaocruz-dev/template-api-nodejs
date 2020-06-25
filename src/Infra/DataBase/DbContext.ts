@@ -1,7 +1,7 @@
 import { MongoClient, Db, Collection } from 'mongodb'
-import { name } from '@/../package.json'
 
-import { MenusMigrations, UserMigrations, UserGroupMigrations } from '../Migrations'
+import { name } from '@/../package.json'
+import { MenusMigrations, ProfilesMigrations, UserMigrations } from '../Migrations'
 
 class DbContext {
   private _db: Db
@@ -18,12 +18,12 @@ class DbContext {
       this._db = client.db(this.dbName)
 
       const db = new DataBase()
-      const menusMigration = new MenusMigrations(db.menus)
       const userMigrations = new UserMigrations(db.users)
-      const userGroupMigrations = new UserGroupMigrations(db.userGroups)
-      await menusMigration.set()
+      const menusMigrations = new MenusMigrations(db.menus)
+      const profilesMigrations = new ProfilesMigrations(db.profiles)
       await userMigrations.set()
-      await userGroupMigrations.set()
+      await menusMigrations.set()
+      await profilesMigrations.set()
     })
   }
 
@@ -52,7 +52,7 @@ export class DataBase {
     return dbContext.db.collection('Users')
   }
 
-  public get userGroups (): Collection {
-    return dbContext.db.collection('UserGroups')
+  public get profiles (): Collection {
+    return dbContext.db.collection('Profiles')
   }
 }

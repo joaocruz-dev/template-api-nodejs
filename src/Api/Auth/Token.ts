@@ -40,3 +40,7 @@ function randomString (length = 10): string {
   for (var i = 0; i < length; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
   return text
 }
+
+// for (let i = 0; i < 5; i++) {
+//   console.log(randomString(10))
+// }

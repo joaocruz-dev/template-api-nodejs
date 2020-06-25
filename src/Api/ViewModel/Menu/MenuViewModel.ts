@@ -1,5 +1,6 @@
-import { AutoMap } from '@nartc/automapper'
 import { Type } from 'class-transformer'
+import { AutoMap } from '@nartc/automapper'
+
 import SubMenuViewModel from './SubMenuViewModel'
 
 export default class MenuViewModel {

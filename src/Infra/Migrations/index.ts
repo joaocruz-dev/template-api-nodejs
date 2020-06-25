@@ -1,5 +1,5 @@
-import MenusMigrations from './MenusMigrations'
 import UserMigrations from './UserMigrations'
-import UserGroupMigrations from './UserGroupMigrations'
+import MenusMigrations from './MenusMigrations'
+import ProfilesMigrations from './ProfilesMigrations'
 
-export { MenusMigrations, UserMigrations, UserGroupMigrations }
+export { MenusMigrations, ProfilesMigrations, UserMigrations }

@@ -1,8 +1,9 @@
-import { AutoMap } from '@nartc/automapper'
 import { Type } from 'class-transformer'
-import RuleViewModel from './RuleViewModel'
+import { AutoMap } from '@nartc/automapper'
 
-export default class UserGroupViewModel {
+import PermissionViewModel from './PermissionViewModel'
+
+export default class ProfileViewModel {
   @AutoMap()
   public id: string
 
@@ -12,9 +13,9 @@ export default class UserGroupViewModel {
   @AutoMap()
   public level: number
 
-  @Type(() => RuleViewModel)
-  @AutoMap(() => RuleViewModel)
-  public rules: RuleViewModel[]
+  @Type(() => PermissionViewModel)
+  @AutoMap(() => PermissionViewModel)
+  public permissions: PermissionViewModel[]
 
   @AutoMap()
   public status: boolean

@@ -1,5 +1,6 @@
 import { AutoMap } from '@nartc/automapper'
-import UserGroupViewModel from '../UserGroup/UserGroupViewModel'
+
+import ProfileViewModel from '../Profile/ProfileViewModel'
 
 export default class UserViewModel {
   @AutoMap()
@@ -24,12 +25,12 @@ export default class UserViewModel {
   public avatar: string
 
   @AutoMap()
-  public usergroup: string
+  public idProfile: string
 
   @AutoMap()
   public status: boolean
 
-  public usergroupViewModel: UserGroupViewModel
+  public profile: ProfileViewModel
 
-  get level () { return this.usergroupViewModel?.level }
+  get level () { return this.profile?.level }
 }

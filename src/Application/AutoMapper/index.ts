@@ -3,7 +3,7 @@ import './Address/AddressAutoMapper'
 import './Menu/MenuAutoMapper'
 import './Menu/SubMenuAutoMapper'
 
-import './User/UserAutoMapper'
+import './Profile/ProfileAutoMapper'
+import './Profile/PermissionAutoMapper'
 
-import './UserGroup/UserGroupAutoMapper'
-import './UserGroup/RuleAutoMapper'
+import './User/UserAutoMapper'

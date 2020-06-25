@@ -1,8 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const nodeExternals = require('webpack-node-externals')
 const TerserPlugin = require('terser-webpack-plugin')
+const nodeExternals = require('webpack-node-externals')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
   mode: 'production',

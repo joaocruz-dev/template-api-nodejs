@@ -1,9 +1,9 @@
-
 import { IsNotEmpty } from 'class-validator'
 import { IsObjectId } from '@/Api/ValidationDecorators'
-import UserGroupValidations from './UserGroupValidations'
 
-export default class UserGroupUpdateValidations extends UserGroupValidations {
+import ProfileValidations from './ProfileValidations'
+
+export default class ProfileUpdateValidations extends ProfileValidations {
   @IsNotEmpty()
   @IsObjectId()
   public id: string

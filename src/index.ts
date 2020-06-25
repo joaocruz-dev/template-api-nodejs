@@ -1,2 +1,2 @@
-import './Application/AutoMapper'
 import './Api/startup'
+import './Application/AutoMapper'

@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsString, Length, IsNumber, ValidateIf } from 'class-validator'
+
 import { AddressViewModel } from '@/Api/ViewModel'
 
 export default class AddressValidations implements AddressViewModel {

@@ -1,6 +1,6 @@
 import MenuApp from './Menu/MenuApp'
+import ProfileApp from './Profile/ProfileApp'
 import SettingsApp from './Settings/SettingsApp'
 import UserApp from './User/UserApp'
-import UserGroupApp from './UserGroup/UserGroupApp'
 
-export { MenuApp, SettingsApp, UserApp, UserGroupApp }
+export { MenuApp, ProfileApp, SettingsApp, UserApp }

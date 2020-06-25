@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, MinLength, IsEmail, Length, ValidateIf, IsUrl, IsBoolean } from 'class-validator'
 import { IsObjectId } from '@/Api/ValidationDecorators'
+import { IsNotEmpty, IsString, MinLength, IsEmail, Length, ValidateIf, IsUrl, IsBoolean } from 'class-validator'
 
 export default class UsersValidations {
   @IsNotEmpty()
@@ -33,7 +33,7 @@ export default class UsersValidations {
 
   @IsNotEmpty()
   @IsObjectId()
-  public usergroup: string
+  public idProfile: string
 
   @IsNotEmpty()
   @IsBoolean()

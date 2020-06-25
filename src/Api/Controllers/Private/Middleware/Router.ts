@@ -1,5 +1,10 @@
 import { Request } from 'express'
+import { HttpException } from '@nestjs/common'
+
+import { controllers } from './Routes'
 import { Auth } from './AuthMiddleware'
+import { Controller, Action } from './Controller'
+import { PermissionViewModel } from '@/Api/ViewModel'
 
 export default class Routes {
   private req: Request = null
@@ -10,54 +15,94 @@ export default class Routes {
     this.auth = auth
   }
 
-  verify (): boolean {
-    const level = this.auth.user.level
-    const path = this.req.originalUrl.split('/api/')[1]
-    const action = Routes.actions.find(a => a.id === this.req.method)?.value
-    if (!action) return false
+  private get user () {
+    return this.auth.user
+  }
+
+  // private get url () {
+  //   return this.req.originalUrl.split('/api/')[1]
+  // }
+
+  private get method () {
+    return this.req.method
+  }
+
+  private get path (): string {
+    try {
+      const url = this.req.originalUrl.split('?')[0]
+      const layer = this.req.app._router.stack.find((layer: any) => {
+        return layer.regexp.exec(url) && layer.route
+      })
+      return layer.route.path.split('/api/')[1]
+    } catch (error) {
+      throw new HttpException('Router não encontrado', 403)
+    }
+  }
+
+  public async verify (): Promise<boolean> {
+    const level = this.user.level
 
     // Administrador
     if (level === 1) return true
 
     // Suporte
-    if (level === 2) {
-      return this.checkRoutes(path, action)
-    }
-
-    // Proprietário
-    if (level === 3) {
-      return this.checkRoutes(path, action)
-    }
+    if (level === 2) return await this.checkPermissions(false)
 
     // Usuário
-    if (level === 4) {
-      return this.checkRoutes(path, action)
-    }
+    if (level === 3) return await this.checkPermissions()
   }
 
-  private checkRoutes (path: string, action: string): boolean {
-    const rules = this.auth.user.usergroupViewModel.rules
-    if (Routes.defaultRoutes.find(route => this.startsWith(path, route))) return true
-    if (!rules && !rules.length) return false
-    const rule = rules.find(roule => this.startsWith(path, roule.route))
-    if (!rule) return false
-    return !!rule.actions.find(a => a === action)
+  private async checkPermissions (isProperty = true): Promise<boolean> {
+    const { controller, action } = this.getAction()
+
+    const user = this.permissionsUser(controller, action)
+
+    return user
   }
 
-  private startsWith (path: string, route: string): boolean {
-    return `${path}/`.startsWith(`${route}/`)
+  private permissionsUser (controller: Controller, action: Action): boolean {
+    const permissions = this.defaultPermissions().concat(this.user.profile.permissions || [])
+
+    const permissionController = permissions.find(permission => permission.idController === controller.id)
+    if (!permissionController) return false
+    const permissionAction = permissionController.idActions.find(a => a === action.id)
+    if (!permissionAction) return false
+
+    return true
   }
 
-  static get actions () {
-    return [
-      { id: 'GET', value: 'view' },
-      { id: 'POST', value: 'add' },
-      { id: 'PUT', value: 'update' },
-      { id: 'DELETE', value: 'delete' }
-    ]
+  private getAction () {
+    const controller = controllers.find(controller => `${this.path}/`.startsWith(`${controller.router}/`))
+    if (!controller) throw new HttpException('Controller não encontrado', 403)
+    const path = this.path.split(`${controller.router}/`)[1] || null
+    const action = controller.actions.find(action => action.route === path && action.method === this.method)
+    if (!action) throw new HttpException('Action não encontrada', 403)
+    return { controller, action }
   }
 
-  static get defaultRoutes () {
-    return ['user', 'dashboard', 'address', 'options']
+  private defaultPermissions () {
+    const permissions: PermissionViewModel[] = []
+
+    const address = new PermissionViewModel()
+    address.idController = 'PoMIMJUUtQ'
+    address.idActions = ['DZMkir9I80']
+    permissions.push(address)
+
+    const dashboard = new PermissionViewModel()
+    dashboard.idController = 'sbK9joAF0P'
+    dashboard.idActions = ['5j3UzwwUNp']
+    permissions.push(dashboard)
+
+    const options = new PermissionViewModel()
+    options.idController = 'fVLNQtFeSy'
+    options.idActions = ['tpVAy90Ws0']
+    permissions.push(options)
+
+    const user = new PermissionViewModel()
+    user.idController = 'lFSfYSrNkQ'
+    user.idActions = ['DimqZritcg', 'R2It9FK0yL', 'YojNf17PPR', 'QZWBAJuJqj']
+    permissions.push(user)
+
+    return permissions
   }
 }

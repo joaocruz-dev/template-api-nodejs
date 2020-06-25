@@ -1,16 +1,12 @@
-import { plainToClass } from 'class-transformer'
 import { ObjectId } from 'mongodb'
+import { plainToClass } from 'class-transformer'
 
-import { dbContext, DataBase } from '@/Infra/DataBase/DbContext'
 import { ClassType, Id, keys, resultMongo } from '@/Utils'
+import { dbContext, DataBase } from '@/Infra/DataBase/DbContext'
 
 const dataBase = new DataBase()
 
-declare interface id {
-  _id: ObjectId
-}
-
-declare interface base {
+declare interface BaseEntity {
   _id: ObjectId
   userUpdate?: ObjectId
   userCreated?: ObjectId
@@ -18,7 +14,7 @@ declare interface base {
   dateCreated?: string
 }
 
-export default class BaseRepository<T extends base> {
+export default class BaseRepository<T extends BaseEntity> {
   private dbName: keyof DataBase
   private cls: ClassType<T>
 
@@ -78,7 +74,7 @@ export default class BaseRepository<T extends base> {
     resultMongo(info)
   }
 
-  async getIdElementArray<U extends id> (fieldName: keyof T, cls: ClassType<U>, idData: Id, idElement: Id): Promise<U> {
+  async getIdElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, idElement: Id): Promise<U> {
     const filter = { _id: new ObjectId(idData) }
     const projection: any = { _id: false }
     projection[fieldName] = { $elemMatch: { _id: new ObjectId(idElement) } }
@@ -89,7 +85,7 @@ export default class BaseRepository<T extends base> {
     return element
   }
 
-  async getAllElementArray<U extends id> (fieldName: keyof T, cls: ClassType<U>, idData: Id, filterArray?: object): Promise<U[]> {
+  async getAllElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, filterArray?: object): Promise<U[]> {
     const filter = { _id: new ObjectId(idData) }
     const projection: any = { _id: false }
     projection[fieldName] = filterArray ? { $elemMatch: filterArray } : true
@@ -100,7 +96,7 @@ export default class BaseRepository<T extends base> {
     return elements
   }
 
-  async addElementArray<U extends id> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
+  async addElementArray<U extends BaseEntity> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
     const filter = { _id: new ObjectId(idData) }
     element._id = new ObjectId()
     const $push: any = {}
@@ -109,7 +105,7 @@ export default class BaseRepository<T extends base> {
     resultMongo(info)
   }
 
-  async editElementArray<U extends id> (fieldName: keyof T, cls: ClassType<U>, idData: Id, element: U): Promise<void> {
+  async editElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, element: U): Promise<void> {
     const filter = { _id: new ObjectId(idData) }
     const id = new ObjectId(element._id)
     const baseRepository = new BaseRepository<T>(this.dbName, this.cls)
@@ -129,7 +125,7 @@ export default class BaseRepository<T extends base> {
     resultMongo(info)
   }
 
-  async deleteElementArray<U extends id> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
+  async deleteElementArray<U extends BaseEntity> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
     const filter = { _id: new ObjectId(idData) }
     const id = new ObjectId(element._id)
     const $pull: any = {}

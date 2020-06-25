@@ -1,4 +1,5 @@
 import { Collection } from 'mongodb'
+
 import { Menu, SubMenu } from '@/Domain/Entity'
 
 export default class MenusMigrations {
@@ -26,19 +27,17 @@ export default class MenusMigrations {
 
     const users = new SubMenu()
     users.name = 'Usuários'
-    users.icon = 'person'
+    users.icon = 'las la-user'
     users.router = 'users'
-    users.url = '/users'
-    users.server = 'users'
+    users.server = 'TF2WbNN1li'
     menu.submenus.push(users)
 
-    const userGroups = new SubMenu()
-    userGroups.name = 'Grupo de Usuários'
-    userGroups.icon = 'people'
-    userGroups.router = 'usergroups'
-    userGroups.url = '/usergroups'
-    userGroups.server = 'usergroups'
-    menu.submenus.push(userGroups)
+    const profiles = new SubMenu()
+    profiles.name = 'Perfis'
+    profiles.icon = 'las la-id-card'
+    profiles.router = 'profiles'
+    profiles.server = 'Ws2WpAReby'
+    menu.submenus.push(profiles)
 
     return menu
   }

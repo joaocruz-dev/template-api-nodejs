@@ -3,5 +3,6 @@ node_modules
 dist
 
 # Arquivos
-yarn-error.log
 yarn.lock
+yarn-error.log
+package-lock.json

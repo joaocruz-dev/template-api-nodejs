@@ -1,5 +1,6 @@
-import { Mapper } from '@nartc/automapper'
 import { ObjectId } from 'mongodb'
+import { Mapper } from '@nartc/automapper'
+
 import Token from '@/Api/Auth/Token'
 import { User } from '@/Domain/Entity'
 import { UserViewModel } from '@/Api/ViewModel'
@@ -14,8 +15,8 @@ Mapper.createMap(User, UserViewModel)
     opts => opts.ignore()
   )
   .forMember(
-    dest => dest.usergroup,
-    opts => opts.mapFrom(src => src.usergroup.toHexString())
+    dest => dest.idProfile,
+    opts => opts.mapFrom(src => src.idProfile.toHexString())
   )
   .reverseMap()
   .forPath(
@@ -27,8 +28,8 @@ Mapper.createMap(User, UserViewModel)
     opts => opts.preCondition(src => !!src.password).mapFrom(src => Token.newPass(src.password))
   )
   .forPath(
-    dest => dest.usergroup,
-    opts => opts.preCondition(src => !!src.usergroup).mapFrom(src => new ObjectId(src.usergroup))
+    dest => dest.idProfile,
+    opts => opts.preCondition(src => !!src.idProfile).mapFrom(src => new ObjectId(src.idProfile))
   )
   .forPath(
     dest => dest.status,

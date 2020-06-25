@@ -1,5 +1,5 @@
-import { MenuRepository } from '@/Infra/Repository'
 import { Menu } from '@/Domain/Entity'
+import { MenuRepository } from '@/Infra/Repository'
 
 const menuRepository = new MenuRepository()
 
