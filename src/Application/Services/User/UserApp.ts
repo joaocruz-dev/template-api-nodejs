@@ -1,84 +1,93 @@
 import { Mapper } from '@nartc/automapper'
 
 import { User } from '@/Domain/Entity'
-import { UserServices, ProfileServices } from '@/Domain/Services'
+import ProfileApp from '../Profile/ProfileApp'
+import { UserServices } from '@/Domain/Services'
 import { UserViewModel, ProfileViewModel } from '@/Api/ViewModel'
+
+const userServices = new UserServices()
 
 export default class UserApp {
   static async login (email: string, password: string): Promise<UserViewModel> {
-    const user = await UserServices.login(email, password)
+    const user = await userServices.login(email, password)
     const userView = Mapper.map(user, UserViewModel)
-    userView.profile = await getProfileView(userView.idProfile)
+    userView.profile = await getProfile(userView.idProfile)
     return userView
   }
 
+  static async getSize (): Promise<number> {
+    return await userServices.getSize()
+  }
+
   static async getId (id: string): Promise<UserViewModel> {
-    const user = await UserServices.getId(id)
+    const user = await userServices.getId(id)
     const userView = Mapper.map(user, UserViewModel)
-    userView.profile = await getProfileView(userView.idProfile)
+    userView.profile = await getProfile(userView.idProfile)
     return userView
   }
 
   static async getCPF (cpf: string): Promise<UserViewModel> {
-    const user = await UserServices.getCPF(cpf)
+    const user = await userServices.getCPF(cpf)
     const userView = Mapper.map(user, UserViewModel)
-    userView.profile = await getProfileView(userView.idProfile)
+    userView.profile = await getProfile(userView.idProfile)
     return userView
   }
 
   static async getAll (): Promise<UserViewModel[]> {
-    const users = await UserServices.getAll()
+    const users = await userServices.getAll()
+    const profiles = await ProfileApp.getAll()
     const usersView = Mapper.mapArray(users, UserViewModel)
-    for (const i in usersView) {
-      usersView[i].profile = await getProfileView(usersView[i].idProfile)
+    for (let i = 0; i < usersView.length; i++) {
+      const idProfile = usersView[i].idProfile
+      usersView[i].profile = profiles.find(profile => profile.id === idProfile)
     }
     return usersView
   }
 
-  static async add (origin: string, userView: UserViewModel): Promise<void> {
+  static async add (userView: UserViewModel): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.add(origin, user)
+    await userServices.add(user)
   }
 
   static async register (origin: string, userView: UserViewModel): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.register(origin, user)
+    await userServices.register(origin, user)
   }
 
   static async confirmed (email: string, hash: string): Promise<void> {
-    await UserServices.confirmed(email, hash)
+    await userServices.confirmed(email, hash)
   }
 
   static async recover (origin: string, email: string): Promise<void> {
-    await UserServices.recover(origin, email)
+    await userServices.recover(origin, email)
   }
 
   static async recoverPassword (userView: UserViewModel, hash: string): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.recoverPassword(user, hash)
+    await userServices.recoverPassword(user, hash)
   }
 
   static async update (userView: UserViewModel): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.update(user)
+    await userServices.update(user)
   }
 
   static async updatePassword (password: string, userView: UserViewModel): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.updatePassword(password, user)
+    await userServices.updatePassword(password, user)
   }
 
   static async delete (userView: UserViewModel): Promise<void> {
     const user = Mapper.map(userView, User)
-    await UserServices.delete(user)
+    await userServices.delete(user)
   }
 }
 
-async function getProfileView (id: string): Promise<ProfileViewModel> {
+async function getProfile (id: string): Promise<ProfileViewModel> {
   try {
-    const profile = await ProfileServices.getId(id)
-    return Mapper.map(profile, ProfileViewModel)
+    const profile = await ProfileApp.getId(id)
+    return profile
   } catch (error) {
-    return new ProfileViewModel()
+    return null
   }
 }

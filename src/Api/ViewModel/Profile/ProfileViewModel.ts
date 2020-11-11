@@ -2,6 +2,7 @@ import { Type } from 'class-transformer'
 import { AutoMap } from '@nartc/automapper'
 
 import PermissionViewModel from './PermissionViewModel'
+import { ChangeHistory } from '@/Infra/Repository/Base/BaseRepository'
 
 export default class ProfileViewModel {
   @AutoMap()
@@ -19,6 +20,10 @@ export default class ProfileViewModel {
 
   @AutoMap()
   public status: boolean
+
+  @Type(() => ChangeHistory)
+  @AutoMap(() => ChangeHistory)
+  changeHistory: ChangeHistory[]
 
   getLevel () {
     return [

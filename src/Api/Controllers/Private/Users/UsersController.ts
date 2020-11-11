@@ -20,8 +20,6 @@ export default class UsersController {
       users.push({ ...user, level })
     })
     return users
-    // if (req.auth.user.level === 1) return users
-    // return users.filter(user => user.level >= req.auth.user.level)
   }
 
   @Post()
@@ -29,7 +27,8 @@ export default class UsersController {
   async post (@Req() req: ReqAuth, @Body() user: UsersValidations): Promise<object> {
     try {
       const userView = plainToClass(UserViewModel, user)
-      await UserApp.add(<string>req.headers.origin, userView)
+      await UserApp.add(userView)
+      // await UserApp.add(<string>req.headers.origin, userView)
     } catch (error) {
       throw new CatchException(error)
     }

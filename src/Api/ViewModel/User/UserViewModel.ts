@@ -30,6 +30,9 @@ export default class UserViewModel {
   @AutoMap()
   public status: boolean
 
+  @AutoMap()
+  public confirmed: boolean
+
   public profile: ProfileViewModel
 
   get level () { return this.profile?.level }

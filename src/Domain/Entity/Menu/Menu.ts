@@ -19,8 +19,4 @@ export default class Menu {
   public submenus: SubMenu[]
 
   public _id: ObjectId
-  // public userUpdate: ObjectId
-  // public userCreated: ObjectId
-  // public dateUpdate: string
-  // public dateCreated: string
 }

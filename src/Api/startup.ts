@@ -5,7 +5,7 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 import PublicControllers from './Controllers/Public'
 import PrivateControllers from './Controllers/Private'
 
-import { dbContext } from '@/Infra/DataBase/DbContext'
+import { DataBase } from '@/Infra/DataBase/DataBase'
 import BaseMiddleware from './Middleware/BaseMiddleware'
 
 @Module({
@@ -22,11 +22,11 @@ class AppModule implements NestModule {
 async function bootstrap () {
   const app = await NestFactory.create(AppModule)
 
+  app.use(helmet())
   app.setGlobalPrefix('api')
   app.enableCors({ origin: true })
-  app.use(helmet())
 
   await app.listen(3000)
-  await dbContext.connect()
+  await DataBase.connect()
 }
 bootstrap()

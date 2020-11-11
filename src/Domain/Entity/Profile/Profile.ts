@@ -3,6 +3,7 @@ import { Type } from 'class-transformer'
 import { AutoMap } from '@nartc/automapper'
 
 import Permission from './Permission'
+import { ChangeHistory } from '@/Infra/Repository/Base/BaseRepository'
 
 export default class Profile {
   @AutoMap()
@@ -16,10 +17,6 @@ export default class Profile {
     1 - Administrador
     2 - Suporte
     3 - Usuário
-    Funcionário
-    1 - Proprietário
-    2 - Gerente
-    3 - Funcionário
   */
   @AutoMap()
   public level: number
@@ -31,8 +28,7 @@ export default class Profile {
   @AutoMap()
   public status: boolean
 
-  public userUpdate: ObjectId
-  public userCreated: ObjectId
-  public dateUpdate: string
-  public dateCreated: string
+  @Type(() => ChangeHistory)
+  @AutoMap(() => ChangeHistory)
+  changeHistory: ChangeHistory[]
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
-userReposDocker=jcruzaraujoneto/earthtechnollogy
-tag=acampo
+userReposDocker=user/repository
+tag=name
 
 clear
 echo "##########################################################################################"

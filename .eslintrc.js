@@ -19,13 +19,8 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
-  },
-  overrides: [
-    {
-      files: ['*.ts'],
-      rules: {
-        '@typescript-eslint/no-unused-vars': [2, { args: 'none' }]
-      }
-    }
-  ]
+    'no-use-before-define': 'off',
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-unused-vars': [2, { args: 'none' }]
+  }
 }

@@ -1,10 +1,7 @@
 import { Menu } from '@/Domain/Entity'
+import BaseService from '../Base/BaseService'
 import { MenuRepository } from '@/Infra/Repository'
 
-const menuRepository = new MenuRepository()
-
-export default class MenuServices {
-  static async getAll (): Promise<Menu[]> {
-    return await menuRepository.getAll()
-  }
+export default class MenuServices extends BaseService<Menu, MenuRepository> {
+  constructor () { super(new MenuRepository()) }
 }

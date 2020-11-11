@@ -7,7 +7,7 @@ import { SettingsApp } from '@/Application/Services'
 export default class BaseController {
   @Get()
   get (): string {
-    return 'Api <a href="https://project_name.com">project_name</a>'
+    return 'Api <a href="https://app.project_name.com">project_name</a>'
   }
 
   @Get('status')

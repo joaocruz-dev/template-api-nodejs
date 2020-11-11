@@ -5,7 +5,7 @@ import { ProfileViewModel } from '@/Api/ViewModel'
 import { ProfileApp } from '@/Application/Services'
 import { CatchException } from '@/Api/HttpException'
 import { ReqAuth } from '../Middleware/AuthMiddleware'
-import { userControllers } from '../Middleware/Routes'
+import { userControllers } from '../Middleware/routes'
 import { ProfileValidations, ProfileUpdateValidations } from '../validations'
 
 @Controller('profiles')
@@ -23,10 +23,10 @@ export default class ProfilesController {
 
   @Post()
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async post (@Body() profile: ProfileValidations): Promise<object> {
+  async post (@Req() req: ReqAuth, @Body() profile: ProfileValidations): Promise<object> {
     try {
       const profileView = plainToClass(ProfileViewModel, profile)
-      await ProfileApp.add(profileView)
+      await ProfileApp.add(profileView, req.auth.user.id)
     } catch (error) {
       throw new CatchException(error)
     }
@@ -35,10 +35,10 @@ export default class ProfilesController {
 
   @Put()
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async put (@Body() profile: ProfileUpdateValidations): Promise<object> {
+  async put (@Req() req: ReqAuth, @Body() profile: ProfileUpdateValidations): Promise<object> {
     try {
       const profileView = plainToClass(ProfileViewModel, profile)
-      await ProfileApp.update(profileView)
+      await ProfileApp.update(profileView, req.auth.user.id)
     } catch (error) {
       throw new CatchException(error)
     }

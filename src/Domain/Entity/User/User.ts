@@ -30,16 +30,11 @@ export default class User {
   public status: boolean
 
   @AutoMap()
-  public hashPassword: string
-
-  @AutoMap()
   public confirmed: boolean
 
   @AutoMap()
-  public hashConfirmed: string
+  public hashPassword: string
 
-  public userUpdate: ObjectId
-  public userCreated: ObjectId
-  public dateUpdate: string
-  public dateCreated: string
+  @AutoMap()
+  public hashConfirmed: string
 }

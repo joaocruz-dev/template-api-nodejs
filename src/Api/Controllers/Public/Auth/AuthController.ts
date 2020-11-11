@@ -1,7 +1,7 @@
 import { CatchException } from '@/Api/HttpException'
 import { Controller, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 
-import Token from '@/Api/Auth/Token'
+import Token from '@/Api/Functions/Auth/Token'
 import { UserApp } from '@/Application/Services'
 import LoginValidations from './validations/LoginValidations'
 

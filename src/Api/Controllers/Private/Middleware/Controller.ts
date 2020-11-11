@@ -2,6 +2,20 @@ import { AutoMap } from '@nartc/automapper'
 
 import { ClassFunctionType } from '@/Utils'
 
+export class Action {
+  @AutoMap()
+  public id: string
+
+  @AutoMap()
+  public name: string
+
+  @AutoMap()
+  public route: string
+
+  @AutoMap()
+  public method: string
+}
+
 export class Controller {
   @AutoMap()
   public id: string
@@ -17,20 +31,6 @@ export class Controller {
 
   @AutoMap()
   public actions: Action[]
-}
-
-export class Action {
-  @AutoMap()
-  public id: string
-
-  @AutoMap()
-  public name: string
-
-  @AutoMap()
-  public route: string
-
-  @AutoMap()
-  public method: string
 }
 
 export class GroupController {

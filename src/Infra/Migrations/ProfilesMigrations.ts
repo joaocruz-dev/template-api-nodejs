@@ -3,17 +3,16 @@ import { Collection, ObjectId } from 'mongodb'
 import { Profile } from '@/Domain/Entity'
 
 export default class ProfilesMigrations {
-  private db: Collection
-  constructor (db: Collection) { this.db = db }
+  constructor (private collection: Collection) {}
 
   async set () {
-    const profiles = await this.db.find().toArray()
-    if (!profiles.length) {
-      profiles.push(this.administrador)
-      profiles.push(this.usuario)
-      profiles.push(this.suporte)
-      await this.db.insertMany(profiles)
-    }
+    const profiles = await this.collection.find().toArray()
+    if (profiles.length) return
+
+    profiles.push(this.administrador)
+    profiles.push(this.usuario)
+    profiles.push(this.suporte)
+    await this.collection.insertMany(profiles)
   }
 
   private get administrador () {
@@ -27,21 +26,21 @@ export default class ProfilesMigrations {
     return group
   }
 
-  private get suporte () {
+  private get usuario () {
     const group = new Profile()
-    group.name = 'Suporte'
-    group.level = 2
+    group._id = new ObjectId('5e5be02f1a43784474b14231')
+    group.name = 'Usuário'
+    group.level = 3
     group.status = true
     group.permissions = null
 
     return group
   }
 
-  private get usuario () {
+  private get suporte () {
     const group = new Profile()
-    group._id = new ObjectId('5e5be02f1a43784474b14231')
-    group.name = 'Usuário'
-    group.level = 3
+    group.name = 'Suporte'
+    group.level = 2
     group.status = true
     group.permissions = null
 

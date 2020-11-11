@@ -1,4 +1,7 @@
 import './Address/AddressAutoMapper'
+import './Address/CoordinateAutoMapper'
+
+import './Base/ChangeHistoryAutoMapper'
 
 import './Menu/MenuAutoMapper'
 import './Menu/SubMenuAutoMapper'

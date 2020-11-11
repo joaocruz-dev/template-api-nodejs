@@ -11,10 +11,10 @@ export default class RegisterValidations {
   @Length(15, 15)
   public phone: string
 
-  @IsNotEmpty()
-  @IsString()
-  @Length(14, 14)
-  public cpf: string
+  // @IsNotEmpty()
+  // @IsString()
+  // @Length(14, 14)
+  // public cpf: string
 
   @IsNotEmpty()
   @IsEmail()

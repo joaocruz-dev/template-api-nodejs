@@ -2,9 +2,9 @@ import { Request } from 'express'
 import { plainToClass } from 'class-transformer'
 import { Controller, Req, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 
-import { UserViewModel } from '@/Api/ViewModel'
-import { UserApp } from '@/Application/Services'
 import { CatchException } from '@/Api/HttpException'
+import { UserApp } from '@/Application/Services'
+import { UserViewModel } from '@/Api/ViewModel'
 import RegisterValidations from './validations/RegisterValidations'
 import ConfirmedValidations from './validations/ConfirmedValidations'
 

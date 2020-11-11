@@ -3,12 +3,11 @@ import { Collection, ObjectId } from 'mongodb'
 import { User } from '@/Domain/Entity'
 
 export default class UserMigrations {
-  private db: Collection
-  constructor (db: Collection) { this.db = db }
+  constructor (private collection: Collection) {}
 
   async set () {
-    const users = await this.db.find().toArray()
-    if (!users.length) await this.db.insertOne(this.supervisor)
+    const users = await this.collection.find().toArray()
+    if (!users.length) await this.collection.insertOne(this.supervisor)
   }
 
   private get supervisor () {

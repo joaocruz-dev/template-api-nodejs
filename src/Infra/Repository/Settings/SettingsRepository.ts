@@ -1,7 +1,7 @@
-import BaseRepository from '../Base/BaseRepository'
+import { BaseRepository } from '../Base/BaseRepository'
 
 class Settings {}
 
 export default class SettingsRepository extends BaseRepository<any> {
-  constructor () { super('settings', Settings) }
+  constructor () { super(Settings, 'settings') }
 }

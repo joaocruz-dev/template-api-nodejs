@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 
 export type Id = string|ObjectId
 
-export declare type ClassType<T> = {
+export interface ClassType<T> {
   new (...args: any[]): T
 }
 

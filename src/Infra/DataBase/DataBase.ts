@@ -1,10 +1,11 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 
+import OpMigration from '../Migrations'
 import { name } from '@/../package.json'
-import { MenusMigrations, ProfilesMigrations, UserMigrations } from '../Migrations'
 
-class DbContext {
+class _DataBase {
   private _db: Db
+  private _collections: Collections
   private dbName = name.split('.')[0]
   private client = new MongoClient(this.connection, { useUnifiedTopology: true })
 
@@ -16,14 +17,9 @@ class DbContext {
       if (err) return console.log(err)
       console.log('Connected to the MongoDb')
       this._db = client.db(this.dbName)
+      this._collections = new Collections(this.db)
 
-      const db = new DataBase()
-      const userMigrations = new UserMigrations(db.users)
-      const menusMigrations = new MenusMigrations(db.menus)
-      const profilesMigrations = new ProfilesMigrations(db.profiles)
-      await userMigrations.set()
-      await menusMigrations.set()
-      await profilesMigrations.set()
+      await OpMigration(this.collections)
     })
   }
 
@@ -34,25 +30,31 @@ class DbContext {
 
   public get db () { return this._db }
 
+  public get collections () { return this._collections }
+
   public get isConnected () { return this.client.isConnected() }
 }
 
-export const dbContext = new DbContext()
-
-export class DataBase {
-  public get settings (): Collection {
-    return dbContext.db.collection('Settings')
-  }
+class Collections {
+  constructor (private db: Db) {}
 
   public get menus (): Collection {
-    return dbContext.db.collection('Menus')
-  }
-
-  public get users (): Collection {
-    return dbContext.db.collection('Users')
+    return this.db.collection('Menus')
   }
 
   public get profiles (): Collection {
-    return dbContext.db.collection('Profiles')
+    return this.db.collection('Profiles')
+  }
+
+  public get settings (): Collection {
+    return this.db.collection('Settings')
+  }
+
+  public get users (): Collection {
+    return this.db.collection('Users')
   }
 }
+
+const DataBase = new _DataBase()
+
+export { DataBase, Collections }

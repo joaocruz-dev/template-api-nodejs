@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "noImplicitAny": true,
     "target": "ES6",
-    "allowJs": true,
+    "outDir": "./dist",
+    "module": "commonjs",
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
+
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "removeComments": true,
     "resolveJsonModule": true,
+    "noImplicitReturns": true,
+
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
@@ -19,3 +26,4 @@
     "node_modules"
   ]
 }
+

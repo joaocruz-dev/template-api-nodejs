@@ -1,136 +1,116 @@
-import { ObjectId } from 'mongodb'
+import { AutoMap } from '@nartc/automapper'
 import { plainToClass } from 'class-transformer'
+import { ObjectId, Collection, FilterQuery, FindOneOptions } from 'mongodb'
 
 import { ClassType, Id, keys, resultMongo } from '@/Utils'
-import { dbContext, DataBase } from '@/Infra/DataBase/DbContext'
+import { DataBase, Collections } from '@/Infra/DataBase/DataBase'
 
-const dataBase = new DataBase()
+export abstract class BaseRepository<T extends BaseEntity> {
+  public db = DataBase
 
-declare interface BaseEntity {
-  _id: ObjectId
-  userUpdate?: ObjectId
-  userCreated?: ObjectId
-  dateUpdate?: string
-  dateCreated?: string
-}
+  constructor (
+    private Entity: ClassType<T>,
+    private collectionName: keyof Collections
+  ) {}
 
-export default class BaseRepository<T extends BaseEntity> {
-  private dbName: keyof DataBase
-  private cls: ClassType<T>
-
-  constructor (dbName: keyof DataBase, cls: ClassType<T>) {
-    this.dbName = dbName
-    this.cls = cls
+  public get collection (): Collection {
+    return this.db.collections[this.collectionName]
   }
 
-  get db (): DataBase {
-    return dataBase
+  async getSize (filter?: FilterQuery<T>): Promise<number> {
+    const size = await this.collection.countDocuments(filter)
+    return size
   }
 
-  static get isConnected (): boolean {
-    return dbContext.isConnected
-  }
-
-  async getId (id: Id, projection?: object): Promise<T> {
-    const filter = { _id: new ObjectId(id) }
-    let data = await this.db[this.dbName].findOne(filter, { projection })
-    if (!data) resultMongo(false)
-    data = plainToClass(this.cls, data)
+  async getId (id: Id, options?: FindOneOptions<T extends any ? any: any>): Promise<T> {
+    const filter = <T>{ _id: new ObjectId(id) }
+    let data = await this.collection.findOne<T>(filter, options)
+    data = data ? plainToClass(this.Entity, data) : null
     return data
   }
 
-  async getAll (filter?: object, projection?: object): Promise<T[]> {
-    let datas = await this.db[this.dbName].find(filter, { projection }).toArray()
-    datas = plainToClass(this.cls, datas)
+  async getAll (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
+    let datas = await this.collection.find<T>(filter, options).toArray()
+    datas = plainToClass(this.Entity, datas)
     return datas
   }
 
-  async add (data: T, userCreated?: Id): Promise<void> {
-    if (keys(data).find(key => key === 'userUpdate')) data.userUpdate = null
-    if (keys(data).find(key => key === 'userCreated')) data.userCreated = userCreated ? new ObjectId(userCreated) : null
-    if (keys(data).find(key => key === 'dateUpdate')) data.dateUpdate = null
-    if (keys(data).find(key => key === 'dateCreated')) data.dateCreated = new Date().toISOString()
+  async getNotRemove (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
+    if (!filter) filter = {}
+    const _filter = <T>{
+      ...filter,
+      remove: false
+    }
+    return await this.getAll(_filter, options)
+  }
+
+  async add (data: T, changeHistory?: ChangeHistory): Promise<void> {
+    if (keys(data).find(x => x === 'remove')) data.remove = false
+    if (keys(data).find(x => x === 'changeHistory')) {
+      data.changeHistory = []
+      if (changeHistory) {
+        changeHistory.date = new Date().toISOString()
+        data.changeHistory.push(changeHistory)
+      }
+    }
+
     delete data._id
-    const info = await this.db[this.dbName].insertOne(data)
+    const info = await this.collection.insertOne(data)
     resultMongo(info, 'Documento não adicionado')
   }
 
-  async update (data: T, userUpdate?: Id): Promise<void> {
-    const filter = { _id: new ObjectId(data._id) }
-    if (keys(data).find(key => key === 'userUpdate')) data.userUpdate = userUpdate ? new ObjectId(userUpdate) : null
-    if (keys(data).find(key => key === 'userCreated')) delete data.userCreated
-    if (keys(data).find(key => key === 'dateUpdate')) data.dateUpdate = new Date().toISOString()
-    if (keys(data).find(key => key === 'dateCreated')) delete data.dateCreated
-    delete data._id
-    const info = await this.db[this.dbName].updateOne(filter, {
-      $set: data
-    })
-    resultMongo(info)
-  }
+  async update (data: T, changeHistory?: ChangeHistory): Promise<void> {
+    let push: any = null
+    const filter = <T>{ _id: new ObjectId(data._id) }
 
-  async delete (id: Id): Promise<void> {
-    const filter = { _id: new ObjectId(id) }
-    const info = await this.db[this.dbName].deleteOne(filter)
-    resultMongo(info)
-  }
-
-  async getIdElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, idElement: Id): Promise<U> {
-    const filter = { _id: new ObjectId(idData) }
-    const projection: any = { _id: false }
-    projection[fieldName] = { $elemMatch: { _id: new ObjectId(idElement) } }
-    const dataElement = await this.db[this.dbName].findOne(filter, { projection })
-    if (!dataElement || !dataElement[fieldName]) resultMongo(false)
-    let element = dataElement[fieldName][0]
-    element = plainToClass(cls, element)
-    return element
-  }
-
-  async getAllElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, filterArray?: object): Promise<U[]> {
-    const filter = { _id: new ObjectId(idData) }
-    const projection: any = { _id: false }
-    projection[fieldName] = filterArray ? { $elemMatch: filterArray } : true
-    const dataElements = await this.db[this.dbName].findOne(filter, { projection })
-    if (!dataElements) resultMongo(false)
-    let elements = dataElements[fieldName]
-    elements = plainToClass(cls, elements)
-    return elements
-  }
-
-  async addElementArray<U extends BaseEntity> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
-    const filter = { _id: new ObjectId(idData) }
-    element._id = new ObjectId()
-    const $push: any = {}
-    $push[fieldName] = element
-    const info = await this.db[this.dbName].updateOne(filter, { $push })
-    resultMongo(info)
-  }
-
-  async editElementArray<U extends BaseEntity> (fieldName: keyof T, cls: ClassType<U>, idData: Id, element: U): Promise<void> {
-    const filter = { _id: new ObjectId(idData) }
-    const id = new ObjectId(element._id)
-    const baseRepository = new BaseRepository<T>(this.dbName, this.cls)
-    const _element = await baseRepository.getIdElementArray<U>(fieldName, cls, idData, id)
-    element = {
-      ..._element,
-      ...element
+    if (keys(data).find(x => x === 'changeHistory')) {
+      delete data.changeHistory
+      if (changeHistory) {
+        push = {}
+        changeHistory.date = new Date().toISOString()
+        push.changeHistory = changeHistory
+      }
     }
-    element._id = _element._id
-    const $set: any = {}
-    $set[`${fieldName}.$[i]`] = element
-    const info = await this.db[this.dbName].updateOne(filter, { $set }, {
-      arrayFilters: [
-        { 'i._id': id }
-      ]
-    })
-    resultMongo(info)
+
+    delete data._id
+
+    const update: any = { $set: data }
+    if (push) update.$push = push
+
+    const info = await this.collection.updateOne(filter, update)
+    resultMongo(info, 'Documento não atualizado')
   }
 
-  async deleteElementArray<U extends BaseEntity> (fieldName: keyof T, idData: Id, element: U): Promise<void> {
-    const filter = { _id: new ObjectId(idData) }
-    const id = new ObjectId(element._id)
-    const $pull: any = {}
-    $pull[fieldName] = { _id: id }
-    const info = await this.db[this.dbName].updateOne(filter, { $pull })
+  async remove (data: T, changeHistory?: ChangeHistory): Promise<void> {
+    const id = data._id
+
+    data = new this.Entity()
+    data._id = id
+    data.remove = true
+
+    await this.update(data, changeHistory)
+  }
+
+  async delete (data: T): Promise<void> {
+    const filter = <T>{ _id: new ObjectId(data._id) }
+    const info = await this.collection.deleteOne(filter)
     resultMongo(info)
   }
+}
+
+export class ChangeHistory {
+  @AutoMap()
+  public date?: string
+
+  @AutoMap()
+  public idUser: string
+
+  @AutoMap()
+  public change: string
+}
+
+export interface BaseEntity {
+  _id: ObjectId
+  remove?: boolean
+  changeHistory?: ChangeHistory[]
 }

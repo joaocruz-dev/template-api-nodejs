@@ -2,9 +2,13 @@ import { Request, Response, NextFunction } from 'express'
 import { NestMiddleware, Injectable, HttpException } from '@nestjs/common'
 
 import Router from './Router'
-import Token from '@/Api/Auth/Token'
+import Token from '@/Api/Functions/Auth/Token'
 import { UserViewModel } from '@/Api/ViewModel'
 import { UserApp } from '@/Application/Services'
+
+export interface Auth {
+  user: UserViewModel
+}
 
 export interface ReqAuth extends Request {
   auth: Auth
@@ -14,10 +18,6 @@ interface decodedToken {
   id: string
   iat: number
   exp: number
-}
-
-export interface Auth {
-  user: UserViewModel
 }
 
 @Injectable()

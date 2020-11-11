@@ -1,7 +1,7 @@
 import { Request } from 'express'
 import { HttpException } from '@nestjs/common'
 
-import { controllers } from './Routes'
+import { controllers } from './routes'
 import { Auth } from './AuthMiddleware'
 import { Controller, Action } from './Controller'
 import { PermissionViewModel } from '@/Api/ViewModel'
@@ -46,13 +46,17 @@ export default class Routes {
     if (level === 1) return true
 
     // Suporte
-    if (level === 2) return await this.checkPermissions(false)
+    if (level === 2) return await this.checkPermissions()
+
+    // if (this.req.headers.origin === 'https://admin.project_name.com') return false
 
     // Usuário
     if (level === 3) return await this.checkPermissions()
+
+    return false
   }
 
-  private async checkPermissions (isProperty = true): Promise<boolean> {
+  private async checkPermissions (): Promise<boolean> {
     const { controller, action } = this.getAction()
 
     const user = this.permissionsUser(controller, action)
@@ -83,15 +87,10 @@ export default class Routes {
   private defaultPermissions () {
     const permissions: PermissionViewModel[] = []
 
-    const address = new PermissionViewModel()
-    address.idController = 'PoMIMJUUtQ'
-    address.idActions = ['DZMkir9I80']
-    permissions.push(address)
-
     const dashboard = new PermissionViewModel()
     dashboard.idController = 'sbK9joAF0P'
     dashboard.idActions = ['5j3UzwwUNp']
-    permissions.push(dashboard)
+    if ([1, 2].includes(this.user.profile.level)) permissions.push(dashboard)
 
     const options = new PermissionViewModel()
     options.idController = 'fVLNQtFeSy'

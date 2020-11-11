@@ -37,7 +37,7 @@ export default class Token {
 function randomString (length = 10): string {
   let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789*#@$%&'
-  for (var i = 0; i < length; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
+  for (let i = 0; i < length; i++) { text += possible.charAt(Math.floor(Math.random() * possible.length)) }
   return text
 }
 

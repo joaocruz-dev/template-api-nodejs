@@ -1,4 +1,7 @@
+import { Type } from 'class-transformer'
 import { AutoMap } from '@nartc/automapper'
+
+import Coordinate from './Coordinate'
 
 export default class Address {
   @AutoMap()
@@ -22,9 +25,7 @@ export default class Address {
   @AutoMap()
   public city: string
 
-  @AutoMap()
-  public lat: number
-
-  @AutoMap()
-  public lng: number
+  @Type(() => Coordinate)
+  @AutoMap(() => Coordinate)
+  public coordinate: Coordinate
 }
