@@ -54,7 +54,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
       }
     }
 
-    delete data._id
+    if (!ObjectId.isValid(data._id)) delete data._id
     const info = await this.collection.insertOne(data)
     resultMongo(info, 'Documento não adicionado')
   }
