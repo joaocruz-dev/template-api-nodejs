@@ -1,7 +1,8 @@
 import { Controller, Get } from '@nestjs/common'
 
-import { version } from '@/../package.json'
-import { SettingsApp } from '@/Application/Services'
+import ServerData from '@/Api/Functions/Server/ServerData'
+
+const server = new ServerData()
 
 @Controller()
 export default class BaseController {
@@ -13,11 +14,16 @@ export default class BaseController {
   @Get('status')
   getStatus (): object {
     return {
-      producao: !!process.env.PROD,
-      dev: !process.env.PROD,
-      mongoDB: SettingsApp.isConnected,
-      server: process.env.PROD ? 'https://api.project_name.com/api' : 'http://localhost:3000/api',
-      version
+      version: server.version,
+      mongodb: server.mongodb,
+      environment: server.environment,
+
+      sandbox: server.isSandBox,
+      production: server.isProduction,
+      development: server.isDevelopment,
+
+      view: server.view,
+      server: server.server
     }
   }
 }

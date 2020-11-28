@@ -1,12 +1,14 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 
 import OpMigration from '../Migrations'
-import { name } from '@/../package.json'
+import ServerData from '@/Api/Functions/Server/ServerData'
+
+const server = new ServerData()
 
 class _DataBase {
   private _db: Db
   private _collections: Collections
-  private dbName = name.split('.')[0]
+  private dbName = server.name
   private client = new MongoClient(this.connection, { useUnifiedTopology: true })
 
   async connect () {
@@ -24,8 +26,16 @@ class _DataBase {
   }
 
   private get connection (): string {
-    if (!process.env.PROD === true) return 'mongodb://localhost:27017'
-    return 'url_mongodb_production'
+    switch (server.environment) {
+      case 'production':
+        return 'url_mongodb_production'
+
+      case 'sandbox':
+        return 'url_mongodb_sandbox'
+
+      default:
+        return 'mongodb://localhost:27017'
+    }
   }
 
   public get db () { return this._db }

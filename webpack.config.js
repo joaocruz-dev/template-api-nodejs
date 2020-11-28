@@ -11,7 +11,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
-        PROD: true
+        "NODE_ENV": "production"
       }
     })
   ],
