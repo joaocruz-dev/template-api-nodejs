@@ -24,20 +24,29 @@ export abstract class BaseRepository<T extends BaseEntity> {
 
   async getId (id: Id, options?: FindOneOptions<T extends any ? any: any>): Promise<T> {
     const filter = <T>{ _id: new ObjectId(id) }
-    let data = await this.collection.findOne<T>(filter, options)
-    data = data ? plainToClass(this.Entity, data) : null
-    return data
+    const data = await this.collection.findOne<T>(filter, options)
+    return data ? plainToClass(this.Entity, data) : null
   }
 
   async getAll (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
-    let datas = await this.collection.find<T>(filter, options).toArray()
+    let datas = await this.collection.find<T>(filter, options).sort({ _id: 1 }).toArray()
     datas = plainToClass(this.Entity, datas)
     return datas
   }
 
+  async getFilter (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
+    if (!filter) filter = {}
+    const _filter = <FilterQuery<T>>{
+      ...filter,
+      status: { $in: [true, null] },
+      remove: { $in: [false, null] }
+    }
+    return await this.getAll(_filter, options)
+  }
+
   async getNotRemove (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
     if (!filter) filter = {}
-    const _filter = <T>{
+    const _filter = <FilterQuery<T>>{
       ...filter,
       remove: false
     }
@@ -84,11 +93,12 @@ export abstract class BaseRepository<T extends BaseEntity> {
   async remove (data: T, changeHistory?: ChangeHistory): Promise<void> {
     const id = data._id
 
-    data = new this.Entity()
-    data._id = id
-    data.remove = true
+    const _data = new this.Entity()
+    _data._id = id
+    _data.remove = true
+    if (keys(data).find(x => x === 'changeHistory')) _data.changeHistory = null
 
-    await this.update(data, changeHistory)
+    await this.update(_data, changeHistory)
   }
 
   async delete (data: T): Promise<void> {

@@ -26,8 +26,10 @@ export default class ProfileServices extends BaseService<Profile, ProfileReposit
 
   async delete (profile: Profile): Promise<void> {
     const id = profile._id.toHexString()
+
     const defaultProfiles = ['5e5be02f1a43784474b14230', '5e5be02f1a43784474b14231']
     if (defaultProfiles.includes(id)) throw new Error('Este Perfil não pode ser excluído')
+
     await this.repository.delete(profile)
   }
 }

@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "target": "ES6",
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "CommonJS",
     "paths": {
       "@/*": [
         "src/*"

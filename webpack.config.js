@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 const TerserPlugin = require('terser-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -8,12 +7,7 @@ module.exports = {
   mode: 'production',
   entry: './src/index.ts',
   plugins: [
-    new CleanWebpackPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        "NODE_ENV": "production"
-      }
-    })
+    new CleanWebpackPlugin()
   ],
   output: {
     filename: 'server.js',
@@ -41,12 +35,11 @@ module.exports = {
     extensions: ['.ts', '.js', '.json']
   },
   optimization: {
-    // minimize: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
-          keep_classnames: true,
-          keep_fnames: true
+          keep_fnames: true,
+          keep_classnames: true
         }
       })
     ]

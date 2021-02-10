@@ -8,7 +8,7 @@ const server = new ServerData()
 export default class BaseController {
   @Get()
   get (): string {
-    return 'Api <a href="https://app.project_name.com">project_name</a>'
+    return `Api <a href="${server.view}">Night</a>`
   }
 
   @Get('status')

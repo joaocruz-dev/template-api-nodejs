@@ -18,6 +18,10 @@ export default abstract class BaseService<T extends BaseEntity, R extends BaseRe
     return await this.repository.getAll(filter, options)
   }
 
+  async getFilter (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
+    return await this.repository.getFilter(filter, options)
+  }
+
   async getNotRemove (filter?: FilterQuery<T>, options?: FindOneOptions<T extends any ? any: any>): Promise<T[]> {
     return await this.repository.getNotRemove(filter, options)
   }
@@ -28,6 +32,10 @@ export default abstract class BaseService<T extends BaseEntity, R extends BaseRe
 
   async update (data: T, changeHistory?: ChangeHistory): Promise<void> {
     await this.repository.update(data, changeHistory)
+  }
+
+  async remove (data: T, changeHistory?: ChangeHistory): Promise<void> {
+    await this.repository.remove(data, changeHistory)
   }
 
   async delete (data: T): Promise<void> {

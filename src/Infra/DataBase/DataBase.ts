@@ -1,9 +1,9 @@
 import { MongoClient, Db, Collection } from 'mongodb'
 
 import OpMigration from '../Migrations'
-import ServerData from '@/Api/Functions/Server/ServerData'
+import Server from '@/Api/Functions/Server/Server'
 
-const server = new ServerData()
+const server = new Server()
 
 class _DataBase {
   private _db: Db
