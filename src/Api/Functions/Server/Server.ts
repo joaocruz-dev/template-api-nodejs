@@ -13,7 +13,10 @@ export default class Server {
 
   get isDevelopment (): boolean { return this.environment === 'development' }
 
-  get environment (): string { return this.isSandBox ? 'sandbox' : process.env.NODE_ENV }
+  get environment (): string {
+    if (this.isSandBox) return 'sandbox'
+    return process.env.NODE_ENV === 'production' ? 'production' : 'development'
+  }
 
   get view (): string {
     switch (this.environment) {

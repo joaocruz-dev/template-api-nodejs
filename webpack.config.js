@@ -4,6 +4,7 @@ const nodeExternals = require('webpack-node-externals')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
+  target: 'node',
   mode: 'production',
   entry: './src/index.ts',
   plugins: [

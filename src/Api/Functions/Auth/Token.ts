@@ -1,9 +1,12 @@
 import * as jwt from 'jsonwebtoken'
 import * as bcrypt from 'bcryptjs'
 
+import ServerData from '@/Api/Functions/Server/ServerData'
+
+const server = new ServerData()
 let secret = '@FZHij*eAWUbIrx097keXY*rb&Xdmh7qp35388WfPfQ4V8*2*w'
 
-if (process.env.PROD) secret = randomString(2048)
+if (server.isProduction) secret = randomString(2048)
 
 export default class Token {
   static sign (data: object, time = 3600) {
