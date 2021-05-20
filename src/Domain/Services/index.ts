@@ -1,5 +1,11 @@
-import MenuServices from './Menu/MenuServices'
-import ProfileServices from './Profile/ProfileServices'
-import UserServices from './User/UserServices'
+// Extras
+import ErrorServices from './Extras/Error/ErrorServices'
 
-export { MenuServices, ProfileServices, UserServices }
+// Menu
+import MenuServices from './Menu/MenuServices'
+
+// User
+import UserServices from './User/UserServices'
+import ProfileServices from './User/ProfileServices'
+
+export { ErrorServices, MenuServices, UserServices, ProfileServices }

@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common'
 
-import { controllers } from './Middleware/routes'
-import { AuthMiddleware } from './Middleware/AuthMiddleware'
+import { controllers } from '@/Api/Middleware/Auth/routes'
+import AuthMiddleware from '@/Api/Middleware/Auth/AuthMiddleware'
 
 const stringRoutes = controllers.map(controller => controller.router)
 const classControllers = controllers.map(controller => controller.classController)

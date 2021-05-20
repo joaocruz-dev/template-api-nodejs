@@ -1,5 +1,9 @@
 import { ObjectId } from 'mongodb'
+import { Type } from 'class-transformer'
 import { AutoMap } from '@nartc/automapper'
+
+import Address from '@/Domain/Entity/Extras/Address/Address'
+import HashToken from '@/Domain/Entity/Extras/HashToken/HashToken'
 
 export default class User {
   @AutoMap()
@@ -15,16 +19,17 @@ export default class User {
   public email: string
 
   @AutoMap()
-  public password: string
+  public phone: string
 
   @AutoMap()
-  public phone: string
+  public password: string
 
   @AutoMap()
   public avatar: string
 
-  @AutoMap()
-  public idProfile: ObjectId
+  @Type(() => Address)
+  @AutoMap(() => Address)
+  public address: Address
 
   @AutoMap()
   public status: boolean
@@ -33,8 +38,12 @@ export default class User {
   public confirmed: boolean
 
   @AutoMap()
-  public hashPassword: string
+  public idProfile: ObjectId
+
+  @Type(() => HashToken)
+  @AutoMap(() => HashToken)
+  public hashTokens: HashToken[]
 
   @AutoMap()
-  public hashConfirmed: string
+  public messagingTokens: string[]
 }

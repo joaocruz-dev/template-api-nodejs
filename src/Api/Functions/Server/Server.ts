@@ -21,10 +21,10 @@ export default class Server {
   get view (): string {
     switch (this.environment) {
       case 'production':
-        return `https://${this.name}app.me`
+        return `https://${this.name}.com`
 
       case 'sandbox':
-        return `https://sandbox.${this.name}app.me`
+        return `https://sandbox.${this.name}.com`
 
       default:
         return 'http://localhost:8080'
@@ -34,10 +34,10 @@ export default class Server {
   get server (): string {
     switch (this.environment) {
       case 'production':
-        return `https://api.${this.name}app.me/api`
+        return `https://api.${this.name}.com/api`
 
       case 'sandbox':
-        return `https://api.sandbox.${this.name}app.me/api`
+        return `https://api.sandbox.${this.name}.com/api`
 
       default:
         return 'http://localhost:3000/api'

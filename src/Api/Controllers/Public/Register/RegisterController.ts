@@ -1,35 +1,39 @@
-import { Request } from 'express'
 import { plainToClass } from 'class-transformer'
-import { Controller, Req, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Controller, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common'
 
-import { CatchException } from '@/Api/HttpException'
-import { UserApp } from '@/Application/Services'
 import { UserViewModel } from '@/Api/ViewModel'
-import RegisterValidations from './validations/RegisterValidations'
-import ConfirmedValidations from './validations/ConfirmedValidations'
+import { UserApp } from '@/Application/Services'
+import { CatchException } from '@/Api/HttpException'
+import { InvitationValidations, GetInvitationValidations } from '@/Api/Validation/validations'
 
 @Controller('register')
 export default class RegisterController {
-  @Post()
+  @Post('invitation/info')
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async post (@Req() req: Request, @Body() register: RegisterValidations): Promise<object> {
+  async infoRegistrated (@Body() invitation: GetInvitationValidations): Promise<object> {
     try {
-      const userView = plainToClass(UserViewModel, register)
-      await UserApp.register(<string>req.headers.origin, userView)
+      const user = await UserApp.infoRegistrated(invitation.email, invitation.hash)
+      if (user.confirmed) return user
+      return {
+        name: user.name,
+        cpf: user.cpf,
+        phone: user.phone
+      }
     } catch (error) {
       throw new CatchException(error)
     }
-    return { message: 'Cadastrado com sucesso' }
   }
 
-  @Post('confirmed')
+  @Post('invitation')
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async confirmed (@Body() confirmed: ConfirmedValidations): Promise<object> {
+  async confirmed (@Body() invitation: InvitationValidations): Promise<object> {
     try {
-      await UserApp.confirmed(confirmed.email, confirmed.hash)
+      const userView = plainToClass(UserViewModel, invitation)
+      await UserApp.registrated(userView, invitation.hash)
+
+      return { message: 'Usuário confirmado com sucesso' }
     } catch (error) {
       throw new CatchException(error)
     }
-    return { message: 'Confirmado com sucesso' }
   }
 }

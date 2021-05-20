@@ -11,5 +11,8 @@ export default class SubMenuViewModel {
   public router: string
 
   @AutoMap()
+  public query: object
+
+  @AutoMap()
   public server: string
 }

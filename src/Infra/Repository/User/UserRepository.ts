@@ -1,12 +1,12 @@
 import { plainToClass } from 'class-transformer'
 
 import { User } from '@/Domain/Entity'
-import { BaseRepository } from '../Base/BaseRepository'
+import { BaseRepository } from '@/Infra/Repository/Extras/Base/BaseRepository'
 
 interface Registered {
   cpf?: string
   email?: string
-  phone?: string
+  // phone?: string
 }
 
 export default class UserRepository extends BaseRepository<User> {
@@ -32,11 +32,11 @@ export default class UserRepository extends BaseRepository<User> {
 
   async getRegistered (registered: Registered): Promise<User> {
     const $or: any[] = []
-    const { cpf, email, phone } = registered
+    const { cpf, email } = registered
 
     if (cpf) $or.push({ cpf })
     if (email) $or.push({ email: email.toLowerCase().trim() })
-    if (phone) $or.push({ phone })
+    // if (phone) $or.push({ phone })
 
     const filter = { $or }
     const user = await this.collection.findOne(filter)

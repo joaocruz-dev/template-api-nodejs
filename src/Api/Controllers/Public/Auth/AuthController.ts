@@ -3,7 +3,7 @@ import { Controller, Body, Post, UsePipes, ValidationPipe } from '@nestjs/common
 
 import Token from '@/Api/Functions/Auth/Token'
 import { UserApp } from '@/Application/Services'
-import LoginValidations from './validations/LoginValidations'
+import { LoginValidations } from '@/Api/Validation/validations'
 
 interface accessToken {
   token: string

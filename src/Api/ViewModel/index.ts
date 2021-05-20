@@ -1,12 +1,18 @@
-import AddressViewModel from './Address/AddressViewModel'
-import CoordinateViewModel from './Address/CoordinateViewModel'
+// Extras
+import AddressViewModel from './Extras/Address/AddressViewModel'
+import CoordinateViewModel from './Extras/Address/CoordinateViewModel'
 
+import ErrorViewModel from './Extras/Error/ErrorViewModel'
+
+import ProfileViewModel from './Extras/Profile/ProfileViewModel'
+import PermissionViewModel from './Extras/Profile/PermissionViewModel'
+
+// Menu
 import MenuViewModel from './Menu/MenuViewModel'
 import SubMenuViewModel from './Menu/SubMenuViewModel'
 
-import ProfileViewModel from './Profile/ProfileViewModel'
-import PermissionViewModel from './Profile/PermissionViewModel'
-
+// User
 import UserViewModel from './User/UserViewModel'
+import UserInfoViewModel from './User/UserInfoViewModel'
 
-export { AddressViewModel, CoordinateViewModel, MenuViewModel, SubMenuViewModel, ProfileViewModel, PermissionViewModel, UserViewModel }
+export { AddressViewModel, CoordinateViewModel, ErrorViewModel, ProfileViewModel, PermissionViewModel, MenuViewModel, SubMenuViewModel, UserViewModel, UserInfoViewModel }

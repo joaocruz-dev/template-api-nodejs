@@ -1,6 +1,8 @@
+import { Type } from 'class-transformer'
 import { AutoMap } from '@nartc/automapper'
 
-import ProfileViewModel from '../Profile/ProfileViewModel'
+import AddressViewModel from '@/Api/ViewModel/Extras/Address/AddressViewModel'
+import ProfileViewModel from '@/Api/ViewModel/Extras/Profile/ProfileViewModel'
 
 export default class UserViewModel {
   @AutoMap()
@@ -16,16 +18,17 @@ export default class UserViewModel {
   public email: string
 
   @AutoMap()
-  public password: string
+  public phone: string
 
   @AutoMap()
-  public phone: string
+  public password: string
 
   @AutoMap()
   public avatar: string
 
-  @AutoMap()
-  public idProfile: string
+  @Type(() => AddressViewModel)
+  @AutoMap(() => AddressViewModel)
+  public address: AddressViewModel
 
   @AutoMap()
   public status: boolean
@@ -33,7 +36,12 @@ export default class UserViewModel {
   @AutoMap()
   public confirmed: boolean
 
+  @AutoMap()
+  public idProfile: string
+
   public profile: ProfileViewModel
 
   get level () { return this.profile?.level }
+
+  get isRoot () { return this.profile?.isRoot }
 }

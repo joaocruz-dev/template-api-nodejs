@@ -6,7 +6,7 @@ import PublicControllers from './Controllers/Public'
 import PrivateControllers from './Controllers/Private'
 
 import { DataBase } from '@/Infra/DataBase/DataBase'
-import BaseMiddleware from './Middleware/BaseMiddleware'
+import BaseMiddleware from '@/Api/Middleware/Base/BaseMiddleware'
 
 @Module({
   imports: [PrivateControllers, PublicControllers]

@@ -1,5 +1,11 @@
-import MenuRepository from './Menu/MenuRepository'
-import UserRepository from './User/UserRepository'
-import ProfileRepository from './Profile/ProfileRepository'
+// Extras
+import ErrorRepository from './Extras/Error/ErrorRepository'
 
-export { MenuRepository, UserRepository, ProfileRepository }
+// Menu
+import MenuRepository from './Menu/MenuRepository'
+
+// User
+import UserRepository from './User/UserRepository'
+import ProfileRepository from './User/ProfileRepository'
+
+export { ErrorRepository, MenuRepository, UserRepository, ProfileRepository }

@@ -1,5 +1,11 @@
-import MenuApp from './Menu/MenuApp'
-import ProfileApp from './Profile/ProfileApp'
-import UserApp from './User/UserApp'
+// Extras
+import ErrorApp from './Extras/Error/ErrorApp'
 
-export { MenuApp, ProfileApp, UserApp }
+// Menu
+import MenuApp from './Menu/MenuApp'
+
+// User
+import UserApp from './User/UserApp'
+import ProfileApp from './User/ProfileApp'
+
+export { ErrorApp, MenuApp, UserApp, ProfileApp }

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+
 import AuthController from './Auth/AuthController'
 import BaseController from './Base/BaseController'
 import RecoverController from './Recover/RecoverController'

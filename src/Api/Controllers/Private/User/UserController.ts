@@ -1,18 +1,22 @@
 import { plainToClass } from 'class-transformer'
-import { Controller, Req, Body, Get, Put, UsePipes, ValidationPipe } from '@nestjs/common'
+import { Controller, Req, Body, Get, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
 
-import { UserViewModel } from '@/Api/ViewModel'
+import Router from '@/Api/Middleware/Auth/Router'
 import { CatchException } from '@/Api/HttpException'
-import { ReqAuth } from '../Middleware/AuthMiddleware'
-import UserValidations from './validations/UserValidations'
-import PasswordValidations from './validations/PasswordValidations'
 import { UserApp, MenuApp } from '@/Application/Services'
+import { ReqAuth } from '@/Api/Middleware/Auth/AuthMiddleware'
+import { MenuViewModel, UserViewModel } from '@/Api/ViewModel'
+import { UserValidations, MessagingTokenValidations, PasswordUpdateValidations } from '@/Api/Validation/validations'
 
 @Controller('user')
 export default class UserController {
   @Get()
   async get (@Req() req: ReqAuth) {
-    const user = { ...req.auth.user, level: req.auth.user.level }
+    const user = {
+      ...req.auth.user,
+      level: req.auth.user.level,
+      isRoot: req.auth.user.isRoot
+    }
     delete user.status
     delete user.idProfile
     delete user.profile
@@ -20,20 +24,36 @@ export default class UserController {
   }
 
   @Get('menus')
-  async getMenus (@Req() req: ReqAuth) {
-    const user = req.auth.user
-    let menus = await MenuApp.getAll()
+  async getMenus (@Req() req: ReqAuth): Promise<MenuViewModel[]> {
+    try {
+      const user = req.auth.user
+      let menus = await MenuApp.getAll()
 
-    if (user.level === 1) return menus
+      if (user.level === 1) return menus
 
-    const permissions = req.auth.user.profile.permissions || []
-    menus = menus.map(menu => {
-      menu.submenus = menu.submenus.filter(submenu => {
-        return !!permissions.find(permission => permission.idController === submenu.server)?.idActions.length
+      const permissions = Router.defaultPermissions.concat(req.auth.user.profile.permissions || [])
+      menus = menus.map(menu => {
+        menu.submenus = menu.submenus.filter(submenu => {
+          return !!permissions.find(permission => permission.idController === submenu.server)?.idActions.length
+        })
+        return menu
       })
-      return menu
-    })
-    return menus.filter(menu => !!menu.submenus.length)
+      return menus.filter(menu => !!menu.submenus.length)
+    } catch (error) {
+      throw new CatchException(error, null, req.auth.user)
+    }
+  }
+
+  @Post('messaging/token')
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  async messagingToken (@Req() req: ReqAuth, @Body() messagingToken: MessagingTokenValidations): Promise<object> {
+    try {
+      await UserApp.addMessagingToken(req.auth.user.id, messagingToken.token)
+
+      return { message: 'Token cadastrado com sucesso!' }
+    } catch (error) {
+      throw new CatchException(error, null, req.auth.user)
+    }
   }
 
   @Put()
@@ -43,23 +63,25 @@ export default class UserController {
       const userView = plainToClass(UserViewModel, user)
       userView.id = req.auth.user.id
       await UserApp.update(userView)
+
+      return { message: 'Atualizado com sucesso' }
     } catch (error) {
-      throw new CatchException(error)
+      throw new CatchException(error, null, req.auth.user)
     }
-    return { message: 'Atualizado com sucesso' }
   }
 
   @Put('password')
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
-  async putPassword (@Req() req: ReqAuth, @Body() passwords: PasswordValidations): Promise<object> {
+  async putPassword (@Req() req: ReqAuth, @Body() password: PasswordUpdateValidations): Promise<object> {
     try {
       const userView = new UserViewModel()
       userView.id = req.auth.user.id
-      userView.password = passwords.newPassword
-      await UserApp.updatePassword(passwords.password, userView)
+      userView.password = password.newPassword
+      await UserApp.updatePassword(userView, password.password)
+
+      return { message: 'Atualizado com sucesso' }
     } catch (error) {
-      throw new CatchException(error)
+      throw new CatchException(error, null, req.auth.user)
     }
-    return { message: 'Atualizado com sucesso' }
   }
 }

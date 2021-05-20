@@ -21,7 +21,7 @@ class _DataBase {
       this._db = client.db(this.dbName)
       this._collections = new Collections(this.db)
 
-      await OpMigration(this.collections)
+      await OpMigration()
     })
   }
 
@@ -48,20 +48,22 @@ class _DataBase {
 class Collections {
   constructor (private db: Db) {}
 
-  public get menus (): Collection {
-    return this.db.collection('Menus')
-  }
-
-  public get profiles (): Collection {
-    return this.db.collection('Profiles')
+  // Extras
+  public get errors (): Collection {
+    return this.db.collection('Errors')
   }
 
   public get settings (): Collection {
     return this.db.collection('Settings')
   }
 
+  // User
   public get users (): Collection {
     return this.db.collection('Users')
+  }
+
+  public get profiles (): Collection {
+    return this.db.collection('Profiles')
   }
 }
 
