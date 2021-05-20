@@ -1,5 +1,3 @@
-import { ObjectId } from 'bson'
-
 import { Id, keys } from '@/Utils'
 import Token from '@/Api/Functions/Auth/Token'
 import ProfileServices from './ProfileServices'
@@ -7,10 +5,6 @@ import { HashToken, User } from '@/Domain/Entity'
 import { UserRepository } from '@/Infra/Repository'
 import BaseService from '@/Domain/Services/Extras/Base/BaseService'
 import { Email, TInvitation, TInvitationData, TRecover, TRecoverData } from '@/Infra/Email'
-
-for (let i = 0; i < 5; i++) {
-  console.log(new ObjectId())
-}
 
 export default class UserServices extends BaseService<User, UserRepository> {
   constructor (
