@@ -1,4 +1,4 @@
-# API-TypeScript
+# template-api-nodejs
 
 > Initial files for API in TypeScript, using NestJS and MongoDB
 
